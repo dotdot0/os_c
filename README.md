@@ -1,8 +1,8 @@
 # A small OS in c
 
-# Build
+- Build: 
 
-### Install NASM
+Install NASM
 For Debian Based:
 `apt install nasm`
 For Fedora:
@@ -11,9 +11,9 @@ For Fedora:
 Now run:
 `nasm -f bin boot.asm -o boot.bin`
 
-### Running
+- Running
 
-### Install QEMU
+Install QEMU
 For Debian Based:
 `apt install qemu-system`
 For Fedora:
