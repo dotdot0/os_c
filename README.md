@@ -3,9 +3,9 @@
 - Build: 
 
 Install NASM
-For Debian Based:
+- For Debian Based:
 `apt install nasm`
-For Fedora:
+- For Fedora:
 `dnf install nasm`
 
 Now run:
@@ -14,9 +14,9 @@ Now run:
 - Running
 
 Install QEMU
-For Debian Based:
+- For Debian Based:
 `apt install qemu-system`
-For Fedora:
+- For Fedora:
 `dnf install qemu`
 
 Now run:
