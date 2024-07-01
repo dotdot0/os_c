@@ -5,6 +5,7 @@ mov sp, bp
 mov bx, 0x9000
 mov dh, 3 ; No. of sectors to read
 call disk_load ; loads the data read from disk (0x9000)
+
 mov dx, [0x9000]
 call print_hex
 
