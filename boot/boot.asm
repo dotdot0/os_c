@@ -1,36 +1,27 @@
-[org 0x7c00]
-mov bp, 0x8000
-mov sp, bp
+[org 0x7c00] ; bootloader offset
+    mov bp, 0x9000 ; set the stack
+    mov sp, bp
 
-mov bx, 0x9000
-mov dh, 3 ; No. of sectors to read
-call disk_load ; loads the data read from disk (0x9000)
+    mov bx, MSG_REAL_MODE
+    call print ; This will be written after the BIOS messages
 
-mov dx, [0x9000]
-call print_hex
+    call switch_pm
+    jmp $ ; this will actually never be executed
 
-call print_nl
+%include "boot/boot_sect_print.asm"
+%include "boot/gdt.asm"
+%include "boot/print_32bit_string.asm"
+%include "boot/switch_32bit.asm"
 
-mov dx, [0x9000 + 512]
-call print_hex
+[bits 32]
+BEGIN_PM: ; after the switch we will get here
+    mov ebx, MSG_PROT_MODE
+    call print_string ; Note that this will be written at the top left corner
+    jmp $
 
-call print_nl
+MSG_REAL_MODE db "Started in 16-bit real mode", 0
+MSG_PROT_MODE db "Loaded 32-bit protected mode", 0
 
-mov dx, [0x9000 + 2*512]
-call print_hex
-
-call print_nl
-
-jmp $
-
-%include "boot_sect_print.asm"
-%include "boot_sect_hex.asm"
-%include "boot_sect_disk.asm"
-
-
+; bootsector
 times 510-($-$$) db 0
-db 0x55, 0xaa
-
-times 256 dw 0xdada
-times 256 dw 0xfafd
-times 256 dw 0xaa00
+dw 0xaa55
