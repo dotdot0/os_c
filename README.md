@@ -9,15 +9,24 @@ Install NASM
 `dnf install nasm`
 
 Now run:
-`nasm -f bin boot.asm -o boot.bin`
+```
+cd boot
+nasm -f bin boot.asm -o boot.bin
+```
 
 - Running
 
 Install QEMU
 - For Debian Based:
-`apt install qemu-system`
+```
+apt install qemu-system
+```
 - For Fedora:
-`dnf install qemu`
+```
+dnf install qemu
+```
 
 Now run:
-`qemu-system-x86_64 boot.bin`
+```
+qemu-system-x86_64 boot.bin
+```
