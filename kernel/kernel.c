@@ -5,5 +5,4 @@ void main() {
   printk_at("|=======|", 40, 0);
   printk_at("|NULL OS|", 40, 1);
   printk_at("|=======|", 40, 2);
-  printk_at("Hello, World!\n name", 40, 7);
 }
