@@ -8,18 +8,13 @@ int get_offset(int col, int row);
 int get_offset_row(int offset);
 
 void set_char_at_video_memory(char c, int offset, char attr){
-  if(c=='\n'){
-    int row = get_offset_row(offset);
-    offset = get_offset(0 , row+1);
-  }else{
-    unsigned char *vid_mem = (unsigned char*) VIDEO_ADDRESS;
-    vid_mem[offset] = c;
-    vid_mem[offset+1] = !attr ? WHITE_ON_BLACK : attr;
-  }
+  unsigned char *vid_mem = (unsigned char*) VIDEO_ADDRESS;
+  vid_mem[offset] = c;
+  vid_mem[offset+1] = !attr ? GREEN_ON_BLACK : attr;
 }
 
 int get_offset(int col, int row){
-  return ((row * MAX_COLS+col) * 2);
+  return 2 * (row * MAX_COLS + col);
 }
 
 int get_offset_row(int offset){
@@ -58,11 +53,11 @@ int set_cursor_offset(int offset){
   offset/=2;
   /* Write the high byte */
   port_byte_out(REG_SCREEN_CTRL, 14); // Select High byte reg
-  port_byte_out(REG_SCREEN_DATA, offset>>8); // Write the High Byte
+  port_byte_out(REG_SCREEN_DATA,(unsigned char) (offset>>8)); // Write the High Byte
 
   /* Write the lower byte */
   port_byte_out(REG_SCREEN_CTRL, 15); // Select Low byte reg
-  port_byte_out(REG_SCREEN_DATA, offset&0xff); // Write the low byte
+  port_byte_out(REG_SCREEN_DATA,(unsigned char) (offset&0xff)); // Write the low byte
 
 }
 
@@ -82,11 +77,22 @@ int offset_new_line(int offset){
 
 void printk(char *message){
   int offset = get_cursor_offset();
-  int i;
-  while(message[i]!='0'){
-    set_char_at_video_memory(message[i], offset, 0);
+  int i=0;
+  while(message[i]!='\0'){
+    if(message[i]=='\n'){
+      int row = get_offset_row(offset);
+      offset = get_offset(0, row+1);
+    }else{
+      set_char_at_video_memory(message[i], offset, 0);
+      offset+=2;
+    }
     i++;
-    offset+=2;
   }
   set_cursor_offset(offset);
+}
+
+void printk_at(char* message, int col, int row){
+  int offset = get_offset(col, row);  
+  set_cursor_offset(offset);
+  printk(message);
 }
